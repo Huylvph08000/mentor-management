@@ -4,6 +4,7 @@ package com.vti.mentormanagement.controllers;
 import com.vti.mentormanagement.models.ERole;
 import com.vti.mentormanagement.models.Role;
 import com.vti.mentormanagement.models.User;
+import com.vti.mentormanagement.models.UserStatus;
 import com.vti.mentormanagement.payload.request.LoginRequest;
 import com.vti.mentormanagement.payload.request.SignupRequest;
 import com.vti.mentormanagement.payload.response.JwtResponse;
@@ -60,11 +61,18 @@ public class AuthController {
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
-		return ResponseEntity.ok(new JwtResponse(jwt,
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 roles));
+		return ResponseEntity.ok(new JwtResponse(
+				userDetails.getId(),
+				userDetails.getUsername(),
+				userDetails.getEmail(),
+				userDetails.getLastName(),
+				userDetails.getFirstName(),
+				userDetails.getStatus(),
+				userDetails.getPassword(),
+				userDetails.getAuthorities(),
+				jwt,
+				roles
+												 ));
 	}
 
 	@PostMapping("/signup")
@@ -81,17 +89,14 @@ public class AuthController {
 					.body(new MessageResponse("Error: Email is already in use!"));
 		}
 
-		// Create new user's account
-//		User user = new User(signUpRequest.getUsername(),
-//							 signUpRequest.getEmail(),
-//							 encoder.encode(signUpRequest.getPassword()));
-		User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),
-				null);
+
+		User user = new User(null, signUpRequest.getFirstName(), signUpRequest.getLastName(),signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),
+				UserStatus.ACTIVE.toString(), null);
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
 
 		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+			Role userRole = roleRepository.findByName(ERole.ROLE_MENTOR)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
@@ -103,14 +108,9 @@ public class AuthController {
 					roles.add(adminRole);
 
 					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(modRole);
 
-					break;
 				default:
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+					Role userRole = roleRepository.findByName(ERole.ROLE_MENTOR)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(userRole);
 				}

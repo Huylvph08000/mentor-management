@@ -1,9 +1,20 @@
 package com.vti.mentormanagement.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
+@Getter
+@Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,27 +24,4 @@ public class Role {
 	@Column(length = 20)
 	private ERole name;
 
-	public Role() {
-
-	}
-
-	public Role(ERole name) {
-		this.name = name;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public ERole getName() {
-		return name;
-	}
-
-	public void setName(ERole name) {
-		this.name = name;
-	}
 }

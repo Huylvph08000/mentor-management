@@ -1,64 +1,55 @@
 package com.vti.mentormanagement.payload.response;
 
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
+import java.util.List;
+@Getter
+@Setter
 public class JwtResponse {
 	private String token;
 	private String type = "Bearer";
 	private Long id;
-	private String username;
+	private String firtName;
+	private String lastName;
+	private String userName;
 	private String email;
+	private String status;
 	private List<String> roles;
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public JwtResponse(String firstName, String lastName,String accessToken, Long id, String userName, String email, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
-		this.username = username;
+		this.userName = userName;
 		this.email = email;
 		this.roles = roles;
+		this.firtName = firstName;
+		this.lastName = lastName;
 	}
 
-	public String getAccessToken() {
-		return token;
-	}
-
-	public void setAccessToken(String accessToken) {
-		this.token = accessToken;
-	}
-
-	public String getTokenType() {
-		return type;
-	}
-
-	public void setTokenType(String tokenType) {
-		this.type = tokenType;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
+	public JwtResponse( Long id, String userName, String email, String lastName, String firstName, String status, String jwt, List<String> roles) {
+		this.token = jwt;
+		this.status = status;
 		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
+		this.userName = userName;
 		this.email = email;
+		this.roles = roles;
+		this.firtName = firstName;
+		this.lastName = lastName;
 	}
 
-	public String getUsername() {
-		return username;
-	}
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public List<String> getRoles() {
-		return roles;
+	public JwtResponse(Long id, String userName, String email, String lastName, String firstName, String status, String password, Collection<? extends GrantedAuthority> authorities, String jwt, List<String> roles) {
+		this.token = jwt;
+		this.status = status;
+		this.id = id;
+		this.userName = userName;
+		this.email = email;
+		this.roles = roles;
+		this.firtName = firstName;
+		this.lastName = lastName;
+		this.roles = roles;
 	}
 }
